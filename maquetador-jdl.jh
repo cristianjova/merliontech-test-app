@@ -1,0 +1,9 @@
+entity Sales {
+  description String
+  state State
+  date LocalDate
+}
+
+enum State {
+  IN_CHARGE, SHIPPED, DELIVERED
+}

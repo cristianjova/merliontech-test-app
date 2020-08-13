@@ -1,0 +1,24 @@
+{
+  "testApp": {
+    "sales": {
+      "home": {
+        "title": "Sales",
+        "createLabel": "Crear nuevo Sales",
+        "createOrEditLabel": "Crear o editar Sales",
+        "notFound": "Ningún Sales encontrado"
+      },
+      "created": "Un nuevo Sales ha sido creado con el identificador {{ param }}",
+      "updated": "Un Sales ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Sales ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Sales {{ id }}?"
+      },
+      "detail": {
+        "title": "Sales"
+      },
+      "description": "Description",
+      "state": "State",
+      "date": "Date"
+    }
+  }
+}
