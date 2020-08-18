@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
 import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
+import {TableContainer, Table, TableHead, TableBody, TableCell, TableRow, Hidden, Typography, Grid, Box, Button, IconButton} from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
+import CreateIcon from '@material-ui/icons/Create';
+import DeleteIcon from '@material-ui/icons/Delete';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { green, red } from '@material-ui/core/colors';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './sales.reducer';
@@ -11,6 +19,35 @@ import { ISales } from 'app/shared/model/sales.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface ISalesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+
+const StyledTableCellColor = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white,
+    },
+    body: {
+      fontSize: 14,
+    },
+  }),
+)(TableCell);
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    body: {
+      padding: theme.spacing('10px', '6px')
+    }
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
 
 export const Sales = (props: ISalesProps) => {
   useEffect(() => {
@@ -20,81 +57,155 @@ export const Sales = (props: ISalesProps) => {
   const { salesList, match, loading } = props;
   return (
     <div>
-      <h2 id="sales-heading">
-        <Translate contentKey="testApp.sales.home.title">Sales</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp;
-          <Translate contentKey="testApp.sales.home.createLabel">Create new Sales</Translate>
-        </Link>
-      </h2>
-      <div className="table-responsive">
-        {salesList && salesList.length > 0 ? (
-          <Table responsive>
-            <thead>
-              <tr>
-                <th>
+      <Box mb={2}>
+        <Grid container justify="space-between" alignItems="center">
+          <Grid item xs={6}>
+            <Typography variant="h3">
+              <Translate contentKey="testApp.sales.home.title">Sales</Translate>
+            </Typography>
+          </Grid>
+          <Grid container justify="flex-end" item xs={6}>
+            <Button
+              component={Link}
+              to={`${match.url}/new`}
+              variant="outlined"
+              color="primary"
+              startIcon={<AddCircleIcon />}
+            >
+              Sales
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      {salesList && salesList.length > 0 ? (
+        <TableContainer>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCellColor>
                   <Translate contentKey="global.field.id">ID</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="testApp.sales.description">Description</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="testApp.sales.state">State</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="testApp.sales.date">Date</Translate>
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {salesList.map((sales, i) => (
-                <tr key={`entity-${i}`}>
-                  <td>
-                    <Button tag={Link} to={`${match.url}/${sales.id}`} color="link" size="sm">
-                      {sales.id}
-                    </Button>
-                  </td>
-                  <td>{sales.description}</td>
-                  <td>
-                    <Translate contentKey={`testApp.State.${sales.state}`} />
-                  </td>
-                  <td>{sales.date ? <TextFormat type="date" value={sales.date} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
-                  <td className="text-right">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${sales.id}`} color="info" size="sm">
-                        <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
+                </StyledTableCellColor>
+                <StyledTableCellColor align="center">
+                  <Translate contentKey="testApp.sales.description">
+                    Description
+                  </Translate>
+                </StyledTableCellColor>
+                <Hidden xsDown>
+                  <StyledTableCellColor align="center">
+                    <Translate contentKey="testApp.sales.state">
+                      State
+                    </Translate>
+                  </StyledTableCellColor>
+                </Hidden>
+                <Hidden xsDown>
+                  <StyledTableCellColor align="center">
+                    <Translate contentKey="testApp.sales.date">Date</Translate>
+                  </StyledTableCellColor>
+                </Hidden>
+                <StyledTableCellColor align="center">
+                  Actions
+                </StyledTableCellColor>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {salesList.map(sale => (
+                <StyledTableRow key={sale.id}>
+                  <StyledTableCell component="th" scope="row">
+                    {sale.id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {sale.description}
+                  </StyledTableCell>
+                  <Hidden xsDown>
+                    <StyledTableCell align="center">
+                      {sale.state}
+                    </StyledTableCell>
+                  </Hidden>
+                  <Hidden xsDown>
+                    <StyledTableCell align="center">
+                      {sale.date ? (
+                        <TextFormat
+                          type="date"
+                          value={sale.date}
+                          format={APP_LOCAL_DATE_FORMAT}
+                        />
+                      ) : null}
+                    </StyledTableCell>
+                  </Hidden>
+                  <StyledTableCell align="center">
+                    <Hidden mdUp>
+                      <Button
+                        fullWidth
+                        size="small"
+                        style={{ color: green[500] }}
+                        component={Link}
+                        to={`${match.url}/${sale.id}`}
+                      >
+                        <VisibilityIcon fontSize="small" />
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${sales.id}/edit`} color="primary" size="sm">
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
+                      <Button
+                        fullWidth
+                        size="small"
+                        component={Link}
+                        to={`${match.url}/${sale.id}/edit`}
+                      >
+                        <CreateIcon />
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${sales.id}/delete`} color="danger" size="sm">
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
+                      <Button
+                        fullWidth
+                        size="small"
+                        style={{ color: red[500] }}
+                        component={Link}
+                        to={`${match.url}/${sale.id}/delete`}
+                      >
+                        <DeleteIcon />
                       </Button>
-                    </div>
-                  </td>
-                </tr>
+                    </Hidden>
+                    <Hidden only={['xs', 'sm']}>
+                      <IconButton
+                        component={Link}
+                        to={`${match.url}/${sale.id}`}
+                      >
+                        <VisibilityIcon
+                          fontSize="small"
+                          style={{ color: green[500] }}
+                        />
+                      </IconButton>
+                      <IconButton
+                        component={Link}
+                        to={`${match.url}/${sale.id}/edit`}
+                      >
+                        <CreateIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        component={Link}
+                        to={`${match.url}/${sale.id}/delete`}
+                      >
+                        <DeleteIcon
+                          fontSize="small"
+                          style={{ color: red[500] }}
+                        />
+                      </IconButton>
+                    </Hidden>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
-            </tbody>
+            </TableBody>
           </Table>
-        ) : (
-          !loading && (
-            <div className="alert alert-warning">
-              <Translate contentKey="testApp.sales.home.notFound">No Sales found</Translate>
-            </div>
-          )
-        )}
-      </div>
+        </TableContainer>
+      ) : loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" p={1}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box component='div' className="alert alert-warning">
+          <Typography>
+            <Translate contentKey="testApp.sales.home.notFound">
+              No Sales found
+            </Translate>
+          </Typography>
+        </Box>
+      )}
     </div>
   );
 };

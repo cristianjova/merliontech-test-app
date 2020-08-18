@@ -19,9 +19,19 @@ import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
+import { Container, Box, Paper } from '@material-ui/core';
+import { withStyles, Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
 export interface IAppProps extends StateProps, DispatchProps {}
+
+const useStyles = makeStyles({
+  root: {
+   padding: '1rem',
+   margin: '1rem 0'
+  }
+});
 
 export const App = (props: IAppProps) => {
   useEffect(() => {
@@ -29,10 +39,13 @@ export const App = (props: IAppProps) => {
     props.getProfile();
   }, []);
 
+  const classes = useStyles();
+
   const paddingTop = '60px';
+  const minHeight = '100vh'
   return (
     <Router basename={baseHref}>
-      <div className="app-container" style={{ paddingTop }}>
+      <Box component='div' display='flex' flexDirection="column" className="app-container" style={{ paddingTop, minHeight }}>
         <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
         <ErrorBoundary>
           <Header
@@ -45,15 +58,17 @@ export const App = (props: IAppProps) => {
             isSwaggerEnabled={props.isSwaggerEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Card>
-          <Footer />
-        </div>
-      </div>
+        <Box flexGrow={1}>
+          <Container fixed disableGutters id="app-view-container">
+            <Paper classes={{root: classes.root}} className="jh-card">
+              <ErrorBoundary>
+                <AppRoutes />
+              </ErrorBoundary>
+            </Paper>
+          </Container>
+        </Box>
+        <Footer />
+      </Box>
     </Router>
   );
 };

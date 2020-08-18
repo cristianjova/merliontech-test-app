@@ -11,6 +11,28 @@ import { clearAuthentication } from './shared/reducers/authentication';
 import ErrorBoundary from './shared/error/error-boundary';
 import AppComponent from './app';
 import { loadIcons } from './config/icon-loader';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+
+// Material-UI Theme
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#2a6a9e',
+    },
+    secondary: {
+      main: '#5E99C5'
+    }
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 768,
+      lg: 992,
+      xl: 1280,
+    },
+  },
+});
 
 const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
 
@@ -23,6 +45,8 @@ setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthoriz
 loadIcons();
 
 const rootEl = document.getElementById('root');
+
+const AppWithTheme = () => <ThemeProvider theme={theme}><AppComponent /></ThemeProvider>
 
 const render = Component =>
   // eslint-disable-next-line react/no-render-return-value
@@ -37,6 +61,6 @@ const render = Component =>
       </Provider>
     </ErrorBoundary>,
     rootEl
-  );
+  ); 
 
-render(AppComponent);
+render(AppWithTheme);
