@@ -4,13 +4,14 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, ICrudGetAllAction, TextFormat } from 'react-jhipster';
 
 
-import {TableContainer, Table, TableHead, TableBody, TableCell, TableRow, Hidden, Typography, Grid, Box, Button, IconButton} from '@material-ui/core';
+import {TableContainer, Table, TableHead, TableBody, TableCell, TableRow, Hidden, Typography, Grid, Box, Button, IconButton, Fab, Link as LinkMat, ButtonGroup} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import CreateIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddIcon from '@material-ui/icons/Add';
 import { green, red } from '@material-ui/core/colors';
 
 import { IRootState } from 'app/shared/reducers';
@@ -65,15 +66,16 @@ export const Sales = (props: ISalesProps) => {
             </Typography>
           </Grid>
           <Grid container justify="flex-end" item xs={6}>
-            <Button
-              component={Link}
-              to={`${match.url}/new`}
-              variant="outlined"
-              color="primary"
-              startIcon={<AddCircleIcon />}
-            >
-              Sales
-            </Button>
+            <LinkMat component={Link} to={`${match.url}/new`}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddCircleIcon />}
+                size="large"
+              >
+                Sales
+              </Button>
+            </LinkMat>
           </Grid>
         </Grid>
       </Box>
@@ -134,58 +136,30 @@ export const Sales = (props: ISalesProps) => {
                   </Hidden>
                   <StyledTableCell align="center">
                     <Hidden mdUp>
-                      <Button
-                        fullWidth
-                        size="small"
-                        style={{ color: green[500] }}
-                        component={Link}
-                        to={`${match.url}/${sale.id}`}
-                      >
-                        <VisibilityIcon fontSize="small" />
+                    <ButtonGroup color="primary" orientation="vertical" aria-label="outlined primary button group">
+                      <Button component={Link} to={`${match.url}/${sale.id}`}>
+                        <VisibilityIcon fontSize="small"/>
                       </Button>
-                      <Button
-                        fullWidth
-                        size="small"
-                        component={Link}
-                        to={`${match.url}/${sale.id}/edit`}
-                      >
-                        <CreateIcon />
+                      <Button component={Link} to={`${match.url}/${sale.id}/edit`}>
+                        <CreateIcon fontSize="small"/>
                       </Button>
-                      <Button
-                        fullWidth
-                        size="small"
-                        style={{ color: red[500] }}
-                        component={Link}
-                        to={`${match.url}/${sale.id}/delete`}
-                      >
-                        <DeleteIcon />
+                      <Button component={Link} to={`${match.url}/${sale.id}/delete`}>
+                        <DeleteIcon fontSize="small"/>
                       </Button>
+                    </ButtonGroup>
                     </Hidden>
                     <Hidden only={['xs', 'sm']}>
-                      <IconButton
-                        component={Link}
-                        to={`${match.url}/${sale.id}`}
-                      >
-                        <VisibilityIcon
-                          fontSize="small"
-                          style={{ color: green[500] }}
-                        />
-                      </IconButton>
-                      <IconButton
-                        component={Link}
-                        to={`${match.url}/${sale.id}/edit`}
-                      >
-                        <CreateIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        component={Link}
-                        to={`${match.url}/${sale.id}/delete`}
-                      >
-                        <DeleteIcon
-                          fontSize="small"
-                          style={{ color: red[500] }}
-                        />
-                      </IconButton>
+                      <ButtonGroup color="primary" aria-label="outlined primary button group">
+                        <Button component={Link} to={`${match.url}/${sale.id}`}>
+                          <VisibilityIcon />
+                        </Button>
+                        <Button component={Link} to={`${match.url}/${sale.id}/edit`}>
+                          <CreateIcon />
+                        </Button>
+                        <Button component={Link} to={`${match.url}/${sale.id}/delete`}>
+                          <DeleteIcon />
+                        </Button>
+                      </ButtonGroup>
                     </Hidden>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -198,7 +172,7 @@ export const Sales = (props: ISalesProps) => {
           <CircularProgress />
         </Box>
       ) : (
-        <Box component='div' className="alert alert-warning">
+        <Box component="div" className="alert alert-warning">
           <Typography>
             <Translate contentKey="testApp.sales.home.notFound">
               No Sales found
