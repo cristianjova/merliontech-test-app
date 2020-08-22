@@ -1,9 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from '@material-ui/core';
 
 import { ISales } from 'app/shared/model/sales.model';
 import { IRootState } from 'app/shared/reducers';
@@ -12,17 +20,20 @@ import { getEntity, deleteEntity } from './sales.reducer';
 export interface ISalesDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const SalesDeleteDialog = (props: ISalesDeleteDialogProps) => {
-  useEffect(() => {
-    props.getEntity(props.match.params.id);
-  }, []);
+  const [open, setOpen] = useState(true);
 
-  const handleClose = () => {
+  const handleCloseDialog = () => {
+    setOpen(false);
     props.history.push('/sales');
   };
 
   useEffect(() => {
+    props.getEntity(props.match.params.id);
+  }, []);
+
+  useEffect(() => {
     if (props.updateSuccess) {
-      handleClose();
+      handleCloseDialog();
     }
   }, [props.updateSuccess]);
 
@@ -32,28 +43,40 @@ export const SalesDeleteDialog = (props: ISalesDeleteDialogProps) => {
 
   const { salesEntity } = props;
   return (
-    <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
-        <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
-      </ModalHeader>
-      <ModalBody id="testApp.sales.delete.question">
-        <Translate contentKey="testApp.sales.delete.question" interpolate={{ id: salesEntity.id }}>
-          Are you sure you want to delete this Sales?
-        </Translate>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={handleClose}>
-          <FontAwesomeIcon icon="ban" />
-          &nbsp;
-          <Translate contentKey="entity.action.cancel">Cancel</Translate>
-        </Button>
-        <Button id="jhi-confirm-delete-sales" color="danger" onClick={confirmDelete}>
-          <FontAwesomeIcon icon="trash" />
-          &nbsp;
-          <Translate contentKey="entity.action.delete">Delete</Translate>
-        </Button>
-      </ModalFooter>
-    </Modal>
+    <Box>
+      <Dialog
+        open={open}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+            <Translate contentKey="entity.delete.title">
+              Confirm delete operation
+            </Translate>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="testApp.sales.delete.question">
+            <Typography>
+              <Translate
+                contentKey="testApp.sales.delete.question"
+                interpolate={{ id: salesEntity.id }}
+              >
+                Are you sure you want to delete this Sales?
+              </Translate>
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            <Translate contentKey="entity.action.cancel">Cancel</Translate>
+          </Button>
+          <Button onClick={confirmDelete} color="primary" id="jhi-confirm-delete-sales">
+            <Translate contentKey="entity.action.delete">Delete</Translate>
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
