@@ -27,7 +27,7 @@ export const Login = (props: ILoginProps) => {
   if (isAuthenticated) {
     return <Redirect to={from} />;
   }
-  return <LoginModal showModal={showModal} handleLogin={handleLogin} handleClose={handleClose} loginError={props.loginError} />;
+  return <LoginModal showModal={showModal} handleLogin={handleLogin} handleClose={handleClose} loginError={props.loginError}/>;
 };
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
