@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { Box, Card, CardContent, CardActions, Grid, Typography, Hidden } from '@material-ui/core';
-import { OutlinedInput, FormHelperText, FormControl, InputLabel, MenuItem } from '@material-ui/core';
-import { Formik, Form, Field, FormikHelpers } from 'formik';
+import { FormControl, InputLabel, MenuItem } from '@material-ui/core';
+import { Formik, Form, Field } from 'formik';
 import { TextField, Select} from 'formik-material-ui'
 import { Button as ButtonMat, LinearProgress } from '@material-ui/core';
 ;
@@ -14,7 +12,6 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { getEntity, updateEntity, createEntity, reset } from './sales.reducer';
@@ -271,121 +268,6 @@ export const SalesUpdate = (props: ISalesUpdateProps) => {
                 </Form>
               )}
             </Formik>
-
-            // <AvForm model={isNew ? {} : salesEntity} onSubmit={saveEntity}>
-            //   {!isNew ? (
-            //     <AvGroup>
-            //       <Label for="sales-id">
-            //         <Translate contentKey="global.field.id">ID</Translate>
-            //       </Label>
-            //       <AvInput
-            //         id="sales-id"
-            //         type="text"
-            //         className="form-control"
-            //         name="id"
-            //         required
-            //         readOnly
-            //       />
-            //     </AvGroup>
-            //   ) : null}
-            //   {/* <FormControl variant="outlined" fullWidth>
-            //       <InputLabel htmlFor="sales-description">
-            //         <Translate contentKey="testApp.sales.description">
-            //           Description
-            //         </Translate>
-            //       </InputLabel>
-            //       <OutlinedInput
-            //         id="sales-description"
-            //         name="description"
-            //         label={
-            //           <Translate contentKey="testApp.sales.description">
-            //             Description
-            //           </Translate>
-            //         }
-            //       />
-            //     </FormControl> */}
-            //   <TextField
-            //     id="sales-description"
-            //     name="description"
-            //     label={
-            //       <Translate contentKey="testApp.sales.description">
-            //         Description
-            //       </Translate>
-            //     }
-            //     variant="outlined"
-            //   />
-            //   {/* <AvGroup>
-            //     <Label id="descriptionLabel" for="sales-description">
-            //       <Translate contentKey="testApp.sales.description">
-            //         Description
-            //       </Translate>
-            //     </Label>
-            //     <AvField
-            //       id="sales-description"
-            //       type="text"
-            //       name="description"
-            //     />
-            //   </AvGroup> */}
-            //   <AvGroup>
-            //     <Label id="stateLabel" for="sales-state">
-            //       <Translate contentKey="testApp.sales.state">
-            //         State
-            //       </Translate>
-            //     </Label>
-            //     <AvInput
-            //       id="sales-state"
-            //       type="select"
-            //       className="form-control"
-            //       name="state"
-            //       value={(!isNew && salesEntity.state) || 'IN_CHARGE'}
-            //     >
-            //       <option value="IN_CHARGE">
-            //         {translate('testApp.State.IN_CHARGE')}
-            //       </option>
-            //       <option value="SHIPPED">
-            //         {translate('testApp.State.SHIPPED')}
-            //       </option>
-            //       <option value="DELIVERED">
-            //         {translate('testApp.State.DELIVERED')}
-            //       </option>
-            //     </AvInput>
-            //   </AvGroup>
-            //   <AvGroup>
-            //     <Label id="dateLabel" for="sales-date">
-            //       <Translate contentKey="testApp.sales.date">Date</Translate>
-            //     </Label>
-            //     <AvField
-            //       id="sales-date"
-            //       type="date"
-            //       className="form-control"
-            //       name="date"
-            //     />
-            //   </AvGroup>
-            //   <Button
-            //     tag={Link}
-            //     id="cancel-save"
-            //     to="/sales"
-            //     replace
-            //     color="info"
-            //   >
-            //     <FontAwesomeIcon icon="arrow-left" />
-            //     &nbsp;
-            //     <span className="d-none d-md-inline">
-            //       <Translate contentKey="entity.action.back">Back</Translate>
-            //     </span>
-            //   </Button>
-            //   &nbsp;
-            //   <Button
-            //     color="primary"
-            //     id="save-entity"
-            //     type="submit"
-            //     disabled={updating}
-            //   >
-            //     <FontAwesomeIcon icon="save" />
-            //     &nbsp;
-            //     <Translate contentKey="entity.action.save">Save</Translate>
-            //   </Button>
-            // </AvForm>
           )}
         </Card>
       </Grid>

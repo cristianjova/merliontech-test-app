@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
 import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Card, CardActions, CardContent, Typography, Grid, Button as ButtonMat, Avatar } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Box, Card, CardActions, CardContent, Typography, Grid, Button as ButtonMat, Avatar, useMediaQuery } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -19,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     secondary: {
       color: theme.palette.getContrastText(theme.palette.secondary.main),
       backgroundColor: theme.palette.secondary.main,
-      padding: theme.spacing(0, 1, 0)
+      padding: theme.spacing(4)
     }
   }),
 );
@@ -32,6 +30,8 @@ export const SalesDetail = (props: ISalesDetailProps) => {
   }, []);
 
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { salesEntity } = props;
   return (
@@ -95,16 +95,47 @@ export const SalesDetail = (props: ISalesDetailProps) => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Link to="/sales">
-                <ButtonMat variant="outlined" startIcon={<ArrowBackIcon />}>
-                  <Translate contentKey="entity.action.back">Back</Translate>
-                </ButtonMat>
-              </Link>
-              <Link to={`/sales/${salesEntity.id}/edit`}>
-                <ButtonMat variant="outlined" color="primary" startIcon={<EditIcon />}>
-                  <Translate contentKey="entity.action.edit">Edit</Translate>
-                </ButtonMat>
-              </Link>
+              {isMobile ? (
+                <Box width="100%">
+                  <Box mb={1}>
+                    <Link to="/sales">
+                      <ButtonMat variant="outlined" startIcon={<ArrowBackIcon />} fullWidth>
+                        <Translate contentKey="entity.action.back">Back</Translate>
+                      </ButtonMat>
+                    </Link>
+                  </Box>
+                  <Box mb={1}>
+                    <Link to={`/sales/${salesEntity.id}/edit`}>
+                      <ButtonMat
+                        variant="outlined"
+                        color="primary"
+                        startIcon={<EditIcon />}
+                        fullWidth
+                      >
+                        <Translate contentKey="entity.action.edit">Edit</Translate>
+                      </ButtonMat>
+                    </Link>
+                  </Box>
+                </Box>
+              ) : (
+                <>
+                  <Link to="/sales">
+                    <ButtonMat variant="outlined" startIcon={<ArrowBackIcon />}>
+                      <Translate contentKey="entity.action.back">Back</Translate>
+                    </ButtonMat>
+                  </Link>
+                  <Link to={`/sales/${salesEntity.id}/edit`}>
+                    <ButtonMat
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<EditIcon />}
+                    >
+                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                    </ButtonMat>
+                  </Link>
+                </>
+              )}
+              
             </CardActions>
           </Card>
         </Grid>

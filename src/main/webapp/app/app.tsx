@@ -41,11 +41,10 @@ export const App = (props: IAppProps) => {
 
   const classes = useStyles();
 
-  const paddingTop = '60px';
   const minHeight = '100vh'
   return (
     <Router basename={baseHref}>
-      <Box component='div' display='flex' flexDirection="column" className="app-container" style={{ paddingTop, minHeight }}>
+      <Box component='div' display='flex' flexDirection="column" className="app-container" style={{ minHeight }}>
         <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
         <ErrorBoundary>
           <Header
@@ -59,7 +58,7 @@ export const App = (props: IAppProps) => {
           />
         </ErrorBoundary>
         <Box flexGrow={1}>
-          <Container fixed disableGutters id="app-view-container">
+          <Container fixed id="app-view-container">
             <Paper classes={{root: classes.root}} className="jh-card">
               <ErrorBoundary>
                 <AppRoutes />
