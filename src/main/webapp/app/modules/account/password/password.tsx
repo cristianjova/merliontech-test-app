@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Translate, translate } from 'react-jhipster';
 import { connect } from 'react-redux';
-import { AvForm, AvField } from 'availity-reactstrap-validation';
-import { Row, Col, Button } from 'reactstrap';
+import { Grid, Card, CardContent, CardActions, Button as ButtonMat, Box, Typography, Link as LinkMat, LinearProgress } from '@material-ui/core';
+import { Formik, Form, Field } from 'formik';
+import { TextField } from 'formik-material-ui';
 
 import { IRootState } from 'app/shared/reducers';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -11,8 +12,13 @@ import { savePassword, reset } from './password.reducer';
 
 export interface IUserPasswordProps extends StateProps, DispatchProps {}
 
+interface Values {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export const PasswordPage = (props: IUserPasswordProps) => {
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     props.reset();
@@ -22,75 +28,125 @@ export const PasswordPage = (props: IUserPasswordProps) => {
     };
   }, []);
 
-  const handleValidSubmit = (event, values) => {
-    props.savePassword(values.currentPassword, values.newPassword);
-  };
-
-  const updatePassword = event => setPassword(event.target.value);
-
   return (
-    <div>
-      <Row className="justify-content-center">
-        <Col md="8">
-          <h2 id="password-title">
-            <Translate contentKey="password.title" interpolate={{ username: props.account.login }}>
-              Password for {props.account.login}
-            </Translate>
-          </h2>
-          <AvForm id="password-form" onValidSubmit={handleValidSubmit}>
-            <AvField
-              name="currentPassword"
-              label={translate('global.form.currentpassword.label')}
-              placeholder={translate('global.form.currentpassword.placeholder')}
-              type="password"
-              validate={{
-                required: { value: true, errorMessage: translate('global.messages.validate.newpassword.required') },
-              }}
-            />
-            <AvField
-              name="newPassword"
-              label={translate('global.form.newpassword.label')}
-              placeholder={translate('global.form.newpassword.placeholder')}
-              type="password"
-              validate={{
-                required: { value: true, errorMessage: translate('global.messages.validate.newpassword.required') },
-                minLength: { value: 4, errorMessage: translate('global.messages.validate.newpassword.minlength') },
-                maxLength: { value: 50, errorMessage: translate('global.messages.validate.newpassword.maxlength') },
-              }}
-              onChange={updatePassword}
-            />
-            <PasswordStrengthBar password={password} />
-            <AvField
-              name="confirmPassword"
-              label={translate('global.form.confirmpassword.label')}
-              placeholder={translate('global.form.confirmpassword.placeholder')}
-              type="password"
-              validate={{
-                required: {
-                  value: true,
-                  errorMessage: translate('global.messages.validate.confirmpassword.required'),
-                },
-                minLength: {
-                  value: 4,
-                  errorMessage: translate('global.messages.validate.confirmpassword.minlength'),
-                },
-                maxLength: {
-                  value: 50,
-                  errorMessage: translate('global.messages.validate.confirmpassword.maxlength'),
-                },
-                match: {
-                  value: 'newPassword',
-                  errorMessage: translate('global.messages.error.dontmatch'),
-                },
-              }}
-            />
-            <Button color="success" type="submit">
-              <Translate contentKey="password.form.button">Save</Translate>
-            </Button>
-          </AvForm>
-        </Col>
-      </Row>
-    </div>
+    <>
+     <Grid container justify="center" alignItems="center">
+        <Grid item xs={12} md={8}>
+          <Card variant="outlined">
+            <Box bgcolor="primary.main" color="primary.contrastText" p={1}>
+              <Typography variant="h4" component="h1">
+                <Translate contentKey="password.title" interpolate={{ username: props.account.login }}>
+                  Password for {props.account.login}
+                </Translate>
+              </Typography>
+            </Box>
+            <Formik
+            initialValues= {{
+              currentPassword: '',
+              newPassword: '',
+              confirmPassword: '',
+            }}
+
+            validate={values => {
+              const errors: Partial<Values> = {};
+              if (!values.currentPassword) {
+                errors.currentPassword = translate('global.messages.validate.newpassword.required');
+              }
+
+              if (!values.newPassword) {
+                errors.newPassword = translate('global.messages.validate.newpassword.required')
+              } else if(values.newPassword.length < 4) {
+                errors.newPassword = translate('global.messages.validate.newpassword.minlength');
+              } else if(values.newPassword.length > 54) {
+                errors.newPassword = translate('global.messages.validate.newpassword.maxlength')
+              }
+
+              if (!values.confirmPassword) {
+                errors.confirmPassword = translate('global.messages.validate.confirmpassword.required')
+              } else if(values.confirmPassword.length < 4) {
+                errors.confirmPassword = translate('global.messages.validate.confirmpassword.minlength');
+              } else if(values.confirmPassword.length > 54) {
+                errors.confirmPassword = translate('global.messages.validate.confirmpassword.maxlength')
+              } else if(values.confirmPassword !== values.newPassword) {
+                errors.confirmPassword = translate('global.messages.error.dontmatch')
+              }
+
+              return errors;
+            }}
+
+            onSubmit={(values, { setSubmitting }) => {
+              setTimeout(() => {
+                setSubmitting(false);
+                const {currentPassword, newPassword} = values;
+                props.savePassword( currentPassword, newPassword );
+              }, 500);
+            }}
+          >
+            {({ submitForm, isSubmitting, values}) => (
+              <Form>
+                <CardContent>
+                  <Box mb={2}>
+                    <Field 
+                      component={TextField}
+                      fullWidth
+                      name="currentPassword"
+                      variant="outlined"
+                      label= {
+                        translate('global.form.currentpassword.label')
+                      }
+                      type="password"
+                      required
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <Field 
+                      component={TextField}
+                      fullWidth
+                      name="newPassword"
+                      variant="outlined"
+                      label= {
+                        translate('global.form.newpassword.label')
+                      }
+                      type="password"
+                      required
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <PasswordStrengthBar password={values.newPassword} />
+                  </Box>
+                  <Box mb={2}>
+                    <Field 
+                      component={TextField}
+                      fullWidth
+                      name="confirmPassword"
+                      variant="outlined"
+                      label= {
+                        translate('global.form.confirmpassword.label')
+                      }
+                      type="password"
+                      required
+                    />
+                  </Box>
+                  {isSubmitting && <LinearProgress />}
+                </CardContent>
+                <CardContent>
+                  <ButtonMat
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting}
+                    onClick={submitForm}
+                  >
+                    <Translate contentKey="password.form.button">Save</Translate>
+                  </ButtonMat>
+                </CardContent>
+              </Form>
+              
+            )}
+          </Formik>
+          </Card>
+        </Grid>
+     </Grid>
+    </>
   );
 };
 
